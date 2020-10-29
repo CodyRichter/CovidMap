@@ -12,7 +12,7 @@ class MapComponent extends Component {
 
     return (
       // Important! Always set the container height explicitly
-      <div style={{ height: '100vh', width: '100%' }}>
+      <div style={{ height: '90vh', width: '100%' }}>
         <GoogleMapReact
                 defaultCenter={{ lat: 42.389564, lng: -72.526512 }}
                 defaultZoom={16}
