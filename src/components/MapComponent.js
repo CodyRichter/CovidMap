@@ -1,4 +1,3 @@
-import { Box } from '@material-ui/core';
 import GoogleMapReact from 'google-map-react';
 import React, { Component } from 'react';
 import AlertPin from './AlertPin';
@@ -30,7 +29,19 @@ class MapComponent extends Component {
           <AlertPin
             lat={42.389564}
             lng={-72.526512}
+            numCases={11}
           />
+          <AlertPin
+            lat={42.390014}
+            lng={-72.533509}
+            numCases={9}
+          />
+          <AlertPin
+            lat={42.386235}
+            lng={-72.526887}
+            numCases={10}
+          />
+
         </GoogleMapReact>
       </div>
     );
