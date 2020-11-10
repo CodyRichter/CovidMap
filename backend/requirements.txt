@@ -1,0 +1,9 @@
+pydantic
+fastapi
+pyinstaller
+setuptools
+uuid
+uvicorn
+python-multipart
+python-dotenv
+requests
