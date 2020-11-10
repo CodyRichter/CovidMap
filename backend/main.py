@@ -49,6 +49,18 @@ async def get_all_locations():
     return {'locations': loc}
 
 
+@app.post('/report/{location_id}')
+async def report(location_id):
+    loc = pg_handler.add_case_to_location(location_id)
+    return loc
+
+
+@app.post('/check_in/{location_id}')
+async def report(location_id):
+    loc = pg_handler.check_in_to_location(location_id)
+    return loc
+
+
 @app.get('/purge')
 async def purge():
     pg_handler.delete_all_locations()

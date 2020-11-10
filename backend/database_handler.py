@@ -55,6 +55,30 @@ class PosgresHandler:
     def delete_all_locations(self):
         self.session.query(LocationTable).delete()
 
+    def add_case_to_location(self, location_id):
+        if not self.get_location_by_id(location_id):
+            return 0
+        self.session.query(LocationTable).filter(
+            LocationTable.location_id == location_id).update({'cases': LocationTable.cases+1})
+        try:
+            self.session.commit()
+        except InvalidRequestError:
+            self.session.rollback()
+            return 0
+        return 1
+
+    def check_in_to_location(self, location_id):
+        if not self.get_location_by_id(location_id):
+            return 0
+        self.session.query(LocationTable).filter(
+            LocationTable.location_id == location_id).update({'check_in': LocationTable.check_in+1})
+        try:
+            self.session.commit()
+        except InvalidRequestError:
+            self.session.rollback()
+            return 0
+        return 1
+
     # -------------------------------------------------- Comments ----------------------------------------------------
 
     def add_comment(self, location_id, comment):
