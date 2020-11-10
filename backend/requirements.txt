@@ -7,3 +7,5 @@ uvicorn
 python-multipart
 python-dotenv
 requests
+sqlalchemy
+psycopg2

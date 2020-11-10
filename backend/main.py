@@ -2,8 +2,9 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 import logging
-import asyncio
-import requests
+
+from database_handler import pg_handler
+from models import create_tables
 
 
 app = FastAPI()
@@ -29,6 +30,11 @@ app.add_middleware(
 )
 
 
+@app.on_event("startup")
+async def startup():
+    create_tables()
+
+
 @app.get("/")
 async def root():
     """
@@ -37,3 +43,9 @@ async def root():
     """
     return {"CovidMap Server is Running!"}
 
+
+@app.get('/locations/{name}/{lat}/{lon}')
+async def add_location(name, lat, lon):
+    pg_handler.add_location(name, lat, lon)
+    loc = pg_handler.get_location_by_coordinates(lat, lon)
+    return {'location': loc}
