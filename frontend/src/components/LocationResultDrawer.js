@@ -1,13 +1,14 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
-import { Container, Grid, Typography } from '@material-ui/core';
+import {Button, ButtonGroup, Container, Grid, IconButton, Typography} from '@material-ui/core';
 import WarningIcon from '@material-ui/icons/Warning';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import CommentCard from './CommentCard';
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import axios from "axios";
 
 const useStyles = makeStyles({
     list: {
@@ -25,20 +26,51 @@ const useStyles = makeStyles({
         width: '100%',
         marginTop: '0.8em',
         marginBottom: '0.8em',
+    },
+    centeredNotFull: {
+        justifyContent: 'center',
+        marginTop: '0.8em',
+        marginBottom: '0.8em',
+        width: 'auth',
+        marginLeft: '0.85em',
     }
 });
 
-export default function LocationResultDrawer() {
+export default function LocationResultDrawer(props) {
     const classes = useStyles();
     const [drawerOpen, setDrawerOpen] = React.useState(false);
 
+    useEffect(() => {
+        setDrawerOpen(props.open);
+    }, [props.open]);
+
+
     const toggleDrawer = (open) => (event) => {
-        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+        console.log(event.type);
+        if ((event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift'))) {
+            console.log('Not Closing')
             return;
         }
 
         setDrawerOpen(open);
     };
+
+    function checkIn() {
+        axios.post('http://localhost:4250/check_in/'+props.location_id).then((response) => {
+            props.onLocationUpdate();
+        });
+    }
+
+
+    function reportExposure() {
+        axios.post('http://localhost:4250/report/'+props.location_id).then((response) => {
+            props.onLocationUpdate();
+        });
+    }
+
+    function addComment() {
+
+    }
 
     const list = (anchor) => (
         <div
@@ -48,6 +80,7 @@ export default function LocationResultDrawer() {
             role="presentation"
             onClick={toggleDrawer(false)}
             onKeyDown={toggleDrawer(false)}
+            style={{overflowX: 'hidden'}}
         >
 
             <Container className={classes.barHeader}>
@@ -55,7 +88,7 @@ export default function LocationResultDrawer() {
                     Activity Report For:
                 </Typography>
                 <Typography variant="h6" >
-                    Campus Pond
+                    {props.name}
                 </Typography>
             </Container>
 
@@ -72,8 +105,9 @@ export default function LocationResultDrawer() {
                 
                 <Typography variant="h5" style={{flexGrow: 1}} color="error">
                     &nbsp;
-                    <strong>High Risk Location</strong>
+                    <strong>{props.cases} {props.cases !== 1 && <span>Cases</span>} {props.cases === 1 && <span>Case</span>} Reported</strong>
                 </Typography>
+
 
             </div>
 
@@ -90,7 +124,7 @@ export default function LocationResultDrawer() {
                 
                 <Typography variant="h6" style={{flexGrow: 1}} color="primary">
                     &nbsp;
-                    <strong>23 People Have Checked In</strong>
+                    <strong>{props.check_in} {props.check_in !== 1 && <span>People Have</span>} {props.check_in === 1 && <span>Person Has</span>} Checked In</strong>
 
                 </Typography>
 
@@ -98,11 +132,19 @@ export default function LocationResultDrawer() {
 
             <Divider />
 
+            <ButtonGroup variant="contained"  aria-label="contained primary button group" className={classes.centeredNotFull}>
+                <Button color="primary" onClick={checkIn}>Check In</Button>
+                <Button color="secondary" onClick={reportExposure}>Report Exposure</Button>
+                <Button color="default" onClick={addComment}>Comment</Button>
+            </ButtonGroup>
+
+            <Divider />
+
+
             <Grid
                 container
                 spacing={0}
                 direction="column"
-                alignItems="center"
                 justify="center"
                 width='80%'
             >
@@ -141,13 +183,10 @@ export default function LocationResultDrawer() {
     );
 
     return (
-        <div>
-            <React.Fragment>
-                <Button onClick={toggleDrawer(true)}>Location Results</Button>
-                <Drawer anchor={'left'} open={drawerOpen} onClose={toggleDrawer(false)}>
-                    {list('left')}
-                </Drawer>
-            </React.Fragment>
-        </div>
+        <ClickAwayListener onClickAway={() => toggleDrawer(false)}>
+            <Drawer anchor={'left'} open={drawerOpen} onClose={toggleDrawer(false)}>
+                {list('left')}
+            </Drawer>
+        </ClickAwayListener>
     );
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -7,29 +7,34 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
+import Geocode from "react-geocode";
+import axios from "axios";
 
-export default function ReportCovidDialog() {
-  const [open, setOpen] = React.useState(false);
+export default function ReportCovidDialog(props) {
+  const [dialogOpen, setDialogOpen] = React.useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  useEffect(() => {
+    setDialogOpen(props.isOpen);
+  }, [props.isOpen]);
+
+  const handleCloseSuccess = () => {
+    setDialogOpen(false);
+    props.handleSuccess();
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseNegative = () => {
+    setDialogOpen(false);
+    props.handleNegative();
   };
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Open Report Covid Dialog
-      </Button>
       <Dialog
         fullScreen={fullScreen}
-        open={open}
-        onClose={handleClose}
+        open={dialogOpen}
+        onClose={handleCloseNegative}
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">Report Covid Exposure at This Location?</DialogTitle>
@@ -40,10 +45,10 @@ export default function ReportCovidDialog() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose} color="primary">
+          <Button autoFocus onClick={handleCloseNegative} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary" autoFocus>
+          <Button onClick={handleCloseSuccess} color="primary" autoFocus>
             Confirm
           </Button>
         </DialogActions>

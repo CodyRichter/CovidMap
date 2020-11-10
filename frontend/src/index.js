@@ -4,10 +4,17 @@ import 'fontsource-roboto';
 import HeaderBar from './layout/HeaderBar';
 import MapContainer from './layout/MapContainer';
 
+
+document.body.style.overflow = "hidden";
 ReactDOM.render(
-  <React.StrictMode>
-    <HeaderBar />
-    <MapContainer />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <div style={{
+        marginTop: 0,
+        marginLeft: 0,
+        marginRight: 0,
+        marginBottom: 0,
+    }}>
+        <HeaderBar/>
+        <MapContainer/>
+    </div>,
+    document.getElementById('root')
 );
