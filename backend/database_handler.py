@@ -36,6 +36,10 @@ class PosgresHandler:
         locations = self.session.query(LocationTable).filter(LocationTable.location_id == loc_id).first()
         return locations
 
+    def get_locations(self):
+        locations = self.session.query(LocationTable).all()
+        return locations if locations else []
+
     def get_location_by_coordinates(self, lati, longi):
         locations = self.session.query(LocationTable).filter(LocationTable.latitude == lati and LocationTable.longitude == longi).first()
         return locations
@@ -47,6 +51,9 @@ class PosgresHandler:
             return True
 
         return False
+
+    def delete_all_locations(self):
+        self.session.query(LocationTable).delete()
 
     # -------------------------------------------------- Comments ----------------------------------------------------
 
