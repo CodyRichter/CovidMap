@@ -73,7 +73,12 @@ async def get_comments(location_id):
 
 
 @app.post('/search/{search_string}')
-async def report(search_string):
+async def report(search_string=""):
     loc = pg_handler.get_locations_by_name(search_string)
     return {'locations': loc}
 
+
+@app.post('/search')
+async def report(search_string=""):
+    loc = pg_handler.get_locations()
+    return {'locations': loc}

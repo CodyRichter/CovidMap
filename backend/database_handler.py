@@ -4,6 +4,7 @@ from database_settings import PostgresConfiguration
 from models import LocationTable, CommentTable
 from sqlalchemy.exc import InvalidRequestError
 from time import localtime, strftime
+from sqlalchemy import func
 
 class PosgresHandler:
     def __init__(self, db_string):
@@ -40,9 +41,11 @@ class PosgresHandler:
         locations = self.session.query(LocationTable).all()
         return locations if locations else []
 
-    def get_locations_by_name(self, search_string):
+    def get_locations_by_name(self, search_string: str):
         # TODO: Filter search correctly
-        locations = self.session.query(LocationTable).filter(LocationTable.name == search_string).first()
+        if str == '':
+            return self.get_locations()
+        locations = self.session.query(LocationTable).filter(func.lower(LocationTable.name).like('%'+search_string.lower()+'%')).all()
         return locations if locations else []
 
     def get_location_by_coordinates(self, lati, longi):
