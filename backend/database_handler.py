@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from database_settings import PostgresConfiguration
 from models import LocationTable, CommentTable
 from sqlalchemy.exc import InvalidRequestError
-
+from time import localtime, strftime
 
 class PosgresHandler:
     def __init__(self, db_string):
@@ -37,6 +37,11 @@ class PosgresHandler:
         return locations
 
     def get_locations(self):
+        locations = self.session.query(LocationTable).all()
+        return locations if locations else []
+
+    def get_locations_by_name(self, search_string):
+        # TODO: Filter search correctly
         locations = self.session.query(LocationTable).all()
         return locations if locations else []
 
@@ -81,16 +86,21 @@ class PosgresHandler:
 
     # -------------------------------------------------- Comments ----------------------------------------------------
 
-    def add_comment(self, location_id, comment):
+    def add_comment(self, location_id, title, comment):
 
-        comment_table = CommentTable(location_id=location_id, comment=comment)
-        self.session.add(comment_table)
+        com = CommentTable(
+            location_id=location_id,
+            title=title,
+            comment=comment,
+            timestamp=strftime("%Y-%m-%d %H:%M:%S", localtime()),
+        )
+        self.session.add(com)
         try:
             self.session.commit()
         except InvalidRequestError:
             self.session.rollback()
             raise InvalidRequestError
-        return comment_table
+        return com
 
     def get_comments_by_location(self, location_id: int):
         comments = self.session.query(CommentTable).filter_by(location_id=location_id).all()

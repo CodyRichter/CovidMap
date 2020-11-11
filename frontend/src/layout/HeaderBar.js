@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -7,6 +7,7 @@ import MapIcon from '@material-ui/icons/Map';
 import { Button, Input, InputAdornment } from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import SearchIcon from '@material-ui/icons/Search';
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,6 +28,21 @@ const useStyles = makeStyles((theme) => ({
 export default function HeaderBar() {
     const classes = useStyles();
 
+    let [searchValue, setSearchValue] = useState("");
+
+    let updateSearchStr = event => {
+        setSearchValue(event.target.value);
+    };
+
+    function submitHandler(e) {
+        console.log('Searching With: ['+ searchValue +']');
+        axios.post('http://localhost:4250/search/'+searchValue).then((response) => {
+            console.log(response.data['locations']);
+        });
+        e.preventDefault();
+    }
+
+
 
     return (
         <div className={classes.root}>
@@ -38,10 +54,11 @@ export default function HeaderBar() {
                         <i>CovidTrack</i> by Team13
                     </Typography>
 
-                    <form className={classes.root}>
+                    <form className={classes.root} onSubmit={submitHandler}>
                         <Input
                             id="input-with-icon-adornment"
                             className={classes.textfield}
+                            onChange={updateSearchStr}
                             startAdornment={
                                 <InputAdornment position="start">
                                     <SearchIcon />

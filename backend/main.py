@@ -61,6 +61,19 @@ async def report(location_id):
     return loc
 
 
-@app.get('/purge')
-async def purge():
-    pg_handler.delete_all_locations()
+@app.post('/comments')
+async def add_comment(location_id: int = Form(...), title: str = Form(...), comment: str = Form(...)):
+    pg_handler.add_comment(location_id, title, comment)
+    return {'comments': pg_handler.get_comments_by_location(location_id)}
+
+
+@app.get('/comments/{location_id}')
+async def get_comments(location_id):
+    return {'comments': pg_handler.get_comments_by_location(location_id)}
+
+
+@app.post('/search/{search_string}')
+async def report(search_string):
+    loc = pg_handler.get_locations_by_name(search_string)
+    return {'locations': loc}
+

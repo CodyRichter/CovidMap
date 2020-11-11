@@ -23,10 +23,12 @@ class LocationTable(Base):
 
 
 class CommentTable(Base):
-    __tablename__ = 'logins'
+    __tablename__ = 'comments'
     comment_id = Column(Integer, primary_key=True, autoincrement=True)
     location_id = Column(Integer, ForeignKey('locations.location_id'))
+    title = Column(String)
     comment = Column(String)
+    timestamp = Column(String)
 
 
 def create_tables():
