@@ -8,13 +8,10 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
   root: {
-    minWidth: 345,
-    marginTop: '0.8em',
+    width: '80%',
+    marginRight: '10%',
     marginBottom: '0.8em',
-    marginLeft: '0.5em',
-  },
-  media: {
-    height: 140,
+    marginLeft: '10%',
   },
 });
 
@@ -26,15 +23,15 @@ export default function CommentCard(props) {
       <CardActionArea>
 
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
+          <Typography gutterBottom variant="h6" component="h2">
               <ModeCommentIcon />
               &nbsp; &nbsp;
                  {props.title}
           </Typography>
-          <Typography gutterBottom variant="h6" component="h6" color="textSecondary" style={{fontSize: 14}} >
+          <Typography gutterBottom variant="h7" component="h6" color="textSecondary" style={{fontSize: 14}} >
                     {props.timestamp}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
+          <Typography variant="p" color="textSecondary" style={{wordWrap: 'break-word'}}>
             {props.comment}
           </Typography>
         </CardContent>
