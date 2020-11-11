@@ -42,7 +42,7 @@ class PosgresHandler:
 
     def get_locations_by_name(self, search_string):
         # TODO: Filter search correctly
-        locations = self.session.query(LocationTable).all()
+        locations = self.session.query(LocationTable).filter(LocationTable.name == search_string).first()
         return locations if locations else []
 
     def get_location_by_coordinates(self, lati, longi):
