@@ -2,6 +2,9 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## API Disclaimer
+The API keys used in this project have been disabled due to the public release of the source code. If interested in using this code, please generate new API keys with Google and substitite them in.
+
 ## Available Scripts
 
 In the project directory, you can run:
